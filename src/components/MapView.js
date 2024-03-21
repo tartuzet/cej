@@ -44,7 +44,7 @@ const markers = [
 ];
 
 const customIcon = new Icon({
-  iconUrl: require("../assets/gps3.png"),
+  iconUrl: require("../assets/gps.png"),
   iconSize: [38, 38],
 });
 
