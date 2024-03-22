@@ -1,4 +1,4 @@
-import React, {useState,useEffect}  from "react";
+import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
@@ -25,11 +25,11 @@ const MapView = () => {
 
         {data.places.map((place, i) => (
           <Marker key={i} position={place.geocode} icon={customIcon}>
-            <Popup> 
+            <Popup maxHeight={200} maxWidth={200}> 
             <div align='center'>
               <p><strong>{place.popUp}</strong></p>
-              <img src={place.logoName} height="150px" width="150px"/>
               <p>{place.address}</p>
+              <img alt="" src={place.logoName} height="100px" width="100px"/>
             </div>
             </Popup>
           </Marker>
