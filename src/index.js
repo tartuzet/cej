@@ -7,7 +7,17 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <div align='center'>
+    <h1>Directorio de la Confraternidad Evagélica de Jiutepec</h1>
+    </div>
     <App />
+    <br/><br/>
+    <div align='center'>
+    <a href="https://www.facebook.com/confraternidadjiutepec">¡Visita nuestra página de facebook!</a>    
+    <p>©2024 CEJ | Un sitio de la Confraternidad Evagélica Jiutepec</p>
+    </div>    
+    <br/><br/>
+
   </React.StrictMode>
 );
 

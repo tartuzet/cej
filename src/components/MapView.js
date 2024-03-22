@@ -1,47 +1,9 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import React, {useState,useEffect}  from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
+import data from '../api/data.json';
 
-const markers = [
-  {
-    geocode: [18.90279531578539, -99.16414629985601],
-    popUp: "Centro Cristiano Rey de Gloria",
-  },
-  {
-    geocode: [18.9141881, -99.2114985],
-    popUp: "La Hermosa",
-  },
-  {
-    geocode: [18.90263, -99.17367],
-    popUp: "Iglesia Gracia y Verdad",
-  },
-  {
-    geocode: [18.902236357891827 , -99.1657631542367],
-    popUp: "La Casa del Padre",
-  },  
-  {
-    geocode: [18.916725313234714 , -99.15992382687163],
-    popUp: "Iglesia Puerta del Cielo",
-  }, 
-  {
-    geocode: [18.886947750721493 , -99.16031406616642],
-    popUp: "Iglesia Altar de Restauración",
-  }, 
-  {
-    geocode: [18.89196 , -99.15720],
-    popUp: "Comunidad Betel",
-  }, 
-  {
-    geocode: [18.886356646138562, -99.17467661920546],
-    popUp: "Iglesia Cristiana Amor y Vida",
-  },   
-  {
-    geocode: [18.89589, -99.16090],
-    popUp: "Armonía  Familiar Cristiana",
-  },           
-];
 
 const customIcon = new Icon({
   iconUrl: require("../assets/gps.png"),
@@ -49,10 +11,11 @@ const customIcon = new Icon({
 });
 
 const MapView = () => {
+  
   return (
     <MapContainer
-      center={[18.89600428000013, -99.18103264971516]}
-      zoom={14}
+      center={[18.899597492013648, -99.16432595022036]}
+      zoom={13}
       scrollWheelZoom={false}
     >
       <TileLayer
@@ -60,13 +23,17 @@ const MapView = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <MarkerClusterGroup>
-        {markers.map((marker) => (
-          <Marker position={marker.geocode} icon={customIcon}>
-            <Popup>{marker.popUp}</Popup>
+        {data.places.map((place, i) => (
+          <Marker key={i} position={place.geocode} icon={customIcon}>
+            <Popup> 
+            <div align='center'>
+              <p><strong>{place.popUp}</strong></p>
+              <img src={place.logoName} height="150px" width="150px"/>
+              <p>{place.address}</p>
+            </div>
+            </Popup>
           </Marker>
         ))}
-      </MarkerClusterGroup>
     </MapContainer>
   );
 };

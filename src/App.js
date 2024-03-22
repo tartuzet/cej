@@ -1,6 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
 import MapView from './components/MapView';
+import React from "react";
+
 
 function App() {
   return (
