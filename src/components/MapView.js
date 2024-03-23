@@ -28,7 +28,8 @@ const MapView = () => {
             <Popup maxHeight={200} maxWidth={200}> 
             <div align='center'>
               <p><strong>{place.popUp}</strong></p>
-              <p>{place.address}</p>
+              <p>{place.address} <a href={"tel:"+place.phone}>{place.phone}</a></p>
+
               <img alt="" src={place.logoName} height="100px" width="100px"/>
             </div>
             </Popup>
