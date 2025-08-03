@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directorio de Iglesias</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+        .leaflet-popup-content img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container py-4">
+    <h1 class="text-center mb-4">Directorio de la Confraternidad Evagélica de Jiutepec</h1>
+
+    <!-- Barra de búsqueda -->
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Buscar iglesia por nombre o dirección...">
+    </div>
+
+    <!-- Mapa -->
+    <div id="map" class="mb-4"></div>
+
+    <!-- Lista de Iglesias -->
+    <div id="churchList" class="list-group"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    // JSON de iglesias
+    const churchesData = {
+        "places": [
+    {
+      "geocode": [18.90279531578539, -99.16414629985601],
+      "popUp": "Centro Cristiano Rey de Gloria",
+      "logoName": "src/assets/img/reydegloria.png",
+      "address": "Calle 20 de Noviembre, Tejalpa, 62570 Jiutepec, Mor.",
+      "phone": "7772095509"
+
+    },
+    {
+        "geocode": [18.91421, -99.19249],
+        "popUp": "La Hermosa",
+        "logoName": "src/assets/img/lahermosa.png",
+        "address": "Jacarandas, Bugambilias, 62577 Jiutepec, Mor.",
+        "phone":""
+
+    },
+    {
+        "geocode": [18.90263, -99.17367],
+        "popUp": "Iglesia Gracia y Verdad",
+        "logoName": "src/assets/img/graciayverdad.png",
+        "address": "Tlahuinetlin, Tejalpa, 62570 Jiutepec, Mor.",
+        "phone":"7774599751"
+    },
+    {
+        "geocode": [18.902236357891827 , -99.1657631542367],
+        "popUp": "La Casa del Padre",
+        "logoName": "src/assets/img/cadadelpadre.png",
+        "address": "C. Emiliano Zapata, Tejalpa, 62570 Jiutepec, Mor.",
+        "phone":""
+    },  
+    {
+        "geocode": [18.916725313234714 , -99.15992382687163],
+        "popUp": "Iglesia Puerta del Cielo",
+        "logoName": "src/assets/img/puertadelcielo.png",
+        "address": "Chabacano, Atenatitlan, 62570 Jiutepec, Mor.",
+        "phone":""
+    }, 
+    {
+        "geocode": [18.886947750721493 , -99.16031406616642],
+        "popUp": "Iglesia Altar de Restauración",
+        "logoName": "src/assets/img/altarderestauracion.png",
+        "address": "Art. 123, Cuahuchiles, 62550 Jiutepec, Mor.",
+        "phone":"7777569372"
+    }, 
+    {
+        "geocode": [18.891884254212815, -99.15728268269375],
+        "popUp": "Comunidad Betel",
+        "logoName": "src/assets/img/betel.png",
+        "address": "Las Rosas, San Francisco Texcalpan, 62573 Jiutepec, Mor.",
+        "phone":""
+    }, 
+    {
+        "geocode": [18.886356646138562, -99.17467661920546],
+        "popUp": "Iglesia Cristiana Amor y Vida",
+        "logoName": "src/assets/img/amoryvida.png",
+        "address": "Dr José G. Parres No. 2, Colonia Centro, Jiutepec, Morelos.",
+        "phone":""
+    },   
+    {
+        "geocode": [18.89589, -99.16090],
+        "popUp": "Armonía  Familiar Cristiana",
+        "logoName": "src/assets/img/armoniafamiliar.png",
+        "address": "Paseo de Los Geranios, Paraiso, 62573 Jiutepec, Mor.",
+        "phone":""
+    },
+    {
+        "geocode": [18.893066818959518, -99.15819567564172],
+        "popUp": "Unánimes Juntos",
+        "logoName": "src/assets/img/unanimesjuntos.png",
+        "address": "Órganos, San Francisco Texcalpan, 62573 Jiutepec, Mor.",
+        "phone":"7776106691"
+    },
+    {
+        "geocode": [18.877265560243195, -99.15263780308251],
+        "popUp": "Iglesia Cristiana Renuevo",
+        "logoName": "src/assets/img/renuevo.png",
+        "address": "Ejido de Cazahuatal, Mor.",
+        "phone":""
+    },
+    {
+        "geocode": [18.9189866981432, -99.16620547760292],
+        "popUp": "Iglesia Proyecto de Vida Morelos",
+        "logoName": "src/assets/img/proyectodevida.png",
+        "address": "Calle 32 norte esquina 4 este Civac, primera sec, Jiutepec, Mor.",
+        "phone": "7775139606"
+    },
+    {
+        "geocode": [18.89017, -99.13077],
+        "popUp": "Compañerismo Cristiano Misionero",
+        "logoName": "src/assets/img/compa-erismocristiano.png",
+        "address": "Palmas, José López Portillo, 62575 Mor.",
+        "phone":""
+    },
+    {
+        "geocode": [18.910112664253635, -99.1534491334337],
+        "popUp": "Iglesia Shekinah",
+        "logoName": "src/assets/img/shekinah.png",
+        "address": "Benito Juárez 27-338, Josefa Ortiz de Dominguez, 62570 Jiutepec, Mor.",
+        "phone":""
+    },
+    {
+        "geocode": [18.924685028470964, -99.17192418977763],
+        "popUp": "Casa de gracia casa de sanidad",
+        "logoName": "src/assets/img/casadegracia.png",
+        "address": "8 de Junio, Otilio Montaño, 62577 Jiutepec, Mor.",
+        "phone":""
+    },
+    {
+        "geocode": [18.896816457041943, -99.16219756510701],
+        "popUp": "Nueva familia en Cristo",
+        "logoName": "src/assets/img/nuevafamiliaencristo.png",
+        "address": "Felicidad, Paraiso, 62573 Jiutepec, Mor.",
+        "phone":""
+    },
+    {
+        "geocode": [18.89945405161983, -99.17869170831536],
+        "popUp": "HEFZI-BA",
+        "logoName": "src/assets/img/hefziba.png",
+        "address": "Cuarta Prol. 5 de Mayo 2, Tlalhuapan, 62553 Jiutepec, Mor.",
+        "phone":""
+    },
+    {
+        "geocode": [18.91528, -99.19359],
+        "popUp": "Familias en Plenitud",
+        "logoName": "src/assets/img/familiasenplenitud.png",
+        "address": "P.º de Los Fresnos 4, Bugambilias, 62577 Jiutepec, Mor.",
+        "phone":""
+    },
+    {
+        "geocode": [18.90943, -99.18225],
+        "popUp": "Mi Fiel Amigo al Rescate",
+        "logoName": "src/assets/img/mifielamigo.png",
+        "address": "C. 3 Numero 16, Los Tarianes, 62577 Jiutepec, Mor.",
+        "phone":""
+    },
+    {
+        "geocode": [18.91757123476425, -99.19834671210666],
+        "popUp": "Aroma Divino",
+        "logoName": "src/assets/img/aromadivino.png",
+        "address": "12 de Octubre 224, Vicente Estrada Cajigal, 62460 Cuernavaca, Mor.",
+        "phone":"7775645710"
+    }   
+        ]
+    };
+
+    // Inicializar mapa
+    const map = L.map('map').setView([18.9, -99.17], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    let markers = [];
+
+    const churchIcon = L.icon({
+    iconUrl: 'src/assets/gps.png',  // tu imagen personalizada
+    iconSize: [40, 40],                // tamaño del icono
+    iconAnchor: [20, 40],              // punto donde "apunta" el icono
+    popupAnchor: [0, -35]              // posición del popup respecto al icono
+    });
+
+
+    // Función para agregar iglesias al mapa y lista
+    function renderChurches(filter = "") {
+        document.getElementById('churchList').innerHTML = "";
+        markers.forEach(marker => map.removeLayer(marker));
+        markers = [];
+
+        churchesData.places
+            .filter(place =>
+                place.popUp.toLowerCase().includes(filter.toLowerCase()) ||
+                place.address.toLowerCase().includes(filter.toLowerCase())
+            )
+            .forEach(place => {
+                // Crear marcador
+                // const marker = L.marker(place.geocode).addTo(map);
+                const marker = L.marker(place.geocode, { icon: churchIcon }).addTo(map);
+                markers.push(marker);
+
+                // Popup con logo y datos
+                const popupContent = `
+                    <div class="text-center">
+                        <img src="${place.logoName}" alt="${place.popUp}">
+                        <h6 class="mt-2 mb-1">${place.popUp}</h6>
+                        <small>${place.address}</small><br>
+                        ${place.phone ? `<a href="tel:${place.phone}" class="btn btn-sm mt-2" style="background-color:#007bff;color:white;border:none;">Llamar</a>` : ""}
+                    </div>
+                `;
+                marker.bindPopup(popupContent);
+
+                // Añadir a lista
+                const listItem = document.createElement("a");
+                listItem.href = "#";
+                listItem.className = "list-group-item list-group-item-action";
+                listItem.innerHTML = `<strong>${place.popUp}</strong><br><small>${place.address}</small>`;
+                listItem.addEventListener("click", () => {
+                    map.setView(place.geocode, 16);
+                    marker.openPopup();
+                });
+                document.getElementById('churchList').appendChild(listItem);
+            });
+    }
+
+    // Búsqueda en tiempo real
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        renderChurches(e.target.value);
+    });
+
+    // Render inicial
+    renderChurches();
+
+    // Obtener ubicación del usuario
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+            const userLatLng = [pos.coords.latitude, pos.coords.longitude];
+
+            // Marcar ubicación del usuario
+            L.marker(userLatLng, {icon: L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/64/64113.png',
+                iconSize: [30, 30]
+            })}).addTo(map).bindPopup("Estás aquí").openPopup();
+
+            // Encontrar iglesia más cercana
+            let nearest = null;
+            let minDist = Infinity;
+
+            churchesData.places.forEach(place => {
+                const dist = haversine(userLatLng, place.geocode);
+                if (dist < minDist) {
+                    minDist = dist;
+                    nearest = place;
+                }
+            });
+
+            if (nearest) {
+                map.setView(nearest.geocode, 14);
+                alert(`La iglesia más cercana es: ${nearest.popUp} (${minDist.toFixed(2)} km)`);
+            }
+
+        }, () => {
+            console.warn("No se pudo obtener la ubicación del usuario");
+        });
+    }
+
+    // Función para calcular distancia Haversine (km)
+    function haversine(coord1, coord2) {
+        const R = 6371;
+        const dLat = (coord2[0] - coord1[0]) * Math.PI / 180;
+        const dLon = (coord2[1] - coord1[1]) * Math.PI / 180;
+        const lat1 = coord1[0] * Math.PI / 180;
+        const lat2 = coord2[0] * Math.PI / 180;
+
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    }
+</script>
+</body>
+</html>
