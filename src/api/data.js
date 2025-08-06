@@ -152,7 +152,7 @@ const churchesData = {
         "logoName": "src/assets/img/mifielamigo.png",
         "address": "C. 3 Numero 16, Los Tarianes, 62577 Jiutepec, Mor.",
         "phone":"",
-        "active": true
+        "active": false
     },
     {
         "geocode": [18.91757123476425, -99.19834671210666],
@@ -161,7 +161,23 @@ const churchesData = {
         "address": "12 de Octubre 224, Vicente Estrada Cajigal, 62460 Cuernavaca, Mor.",
         "phone":"7775645710",
         "active": true
-    }   
+    },
+    {
+        geocode: [18.891959405815523, -99.15775760000746],
+        popUp: "Iglesia Lirio de los Valles", 
+        logoName: "src/assets/img/lirio.jpg",
+        address: "Calle Jacarandas #8, San Francisco Texcalpan, 62573 Jiutepec, Mor.",
+        phone: "7774523672",
+        "active": true
+    },
+    {
+        geocode: [18.9088122, -99.1596626],
+        popUp: "Iglesia Cristiana Bíblica Ríos de Agua Viva ", 
+        logoName: "src/assets/img/riosdeaguaviva.png",
+        address: "Calle independencia# 50 colonia ampliación Vicente Gro. Jiutepec Mor.",
+        phone: "7773450961",
+        "active": true
+    }
 
   ]
 
